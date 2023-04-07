@@ -1,0 +1,33 @@
+{
+  "name": "novel",
+  "displayName": "novel",
+  "description": "novel supporter",
+  "version": "0.0.1",
+  "publisher": "eirueirufu",
+  "engines": {
+    "vscode": "^1.28.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "novel",
+        "extensions": [
+          ".novel"
+        ],
+        "aliases": [
+          "novel"
+        ],
+        "configuration": "./language-configuration.json",
+        "snippets": [
+          {
+            "language": "novel",
+            "path": "./snippets.json"
+          }
+        ]
+      }
+    ]
+  }
+}
