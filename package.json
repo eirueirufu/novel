@@ -15,19 +15,32 @@
       {
         "id": "novel",
         "extensions": [
-          ".novel"
+          ".novel",
+          ".nv"
         ],
-        "aliases": [
-          "novel"
-        ],
-        "configuration": "./language-configuration.json",
-        "snippets": [
-          {
-            "language": "novel",
-            "path": "./snippets.json"
-          }
-        ]
+        "icon": {
+          "light": "./media/novel.jpg",
+          "dark": "./media/novel.jpg"
+        },
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "novel",
+        "path": "./snippets.json"
       }
     ]
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint \"src/**/*.ts\"",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "@types/vscode": "^1.79.1",
+    "vscode": "^1.1.37"
   }
 }
