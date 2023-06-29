@@ -12,7 +12,7 @@
 			"runtimeExecutable": "${execPath}",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"/home/eirueirufu/novel"
+				"${workspaceFolder}/example"
 			],
 			"outFiles": [
 				"${workspaceFolder}/out/**/*.js"
