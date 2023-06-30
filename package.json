@@ -11,6 +11,16 @@
     "Programming Languages"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "characters.addCharacter",
+        "title": "添加人物",
+        "icon": {
+          "light": "media/light/folder.svg",
+          "dark": "media/dark/folder.svg"
+        }
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -30,6 +40,32 @@
         }
       ]
     },
+    "menus": {
+      "view/title": [
+        {
+          "command": "characters.addCharacter",
+          "when": "view == novelCharacters",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "characters.addCharacter",
+          "when": "view == novelCharacters && viewItem == folder",
+          "group": "inline"
+        },
+        {
+          "command": "characters.addCharacter",
+          "when": "view == novelCharacters && viewItem == folder"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "novelCharacters",
+        "contents": "[新建一个人物设定](command:characters.addCharacter)"
+      }
+    ],
     "languages": [
       {
         "id": "novel",
