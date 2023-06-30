@@ -11,6 +11,25 @@
     "Programming Languages"
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "novel",
+          "title": "Novel",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "views": {
+      "novel": [
+        {
+          "id": "novelCharacters",
+          "name": "人物设定",
+          "icon": "media/dep.svg",
+          "contextualTitle": "人物设定"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "novel",
