@@ -11,10 +11,25 @@
     "Programming Languages"
   ],
   "contributes": {
+    "configuration": {
+      "title": "novel自定义配置",
+      "type": "object",
+      "properties": {
+        "novel.highlightWords": {
+          "type": "array",
+          "default": [],
+          "description": "Highlight words in the novel"
+        }
+      }
+    },
     "commands": [
       {
         "command": "openFile",
-        "title": "Open File"
+        "title": "打开文件"
+      },
+      {
+        "command": "highlight.select",
+        "title": "显示/取消高亮"
       },
       {
         "command": "characters.refreshEntry",
@@ -69,6 +84,13 @@
       ]
     },
     "menus": {
+      "editor/context": [
+        {
+          "command": "highlight.select",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation"
+        }
+      ],
       "view/title": [
         {
           "command": "characters.createDirectory",

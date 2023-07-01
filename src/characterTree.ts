@@ -99,7 +99,7 @@ class StorageTreeProvider implements vscode.TreeDataProvider<StorageTreeItem> {
 	}
 }
 
-class StorageTreeItem extends vscode.TreeItem {
+export class StorageTreeItem extends vscode.TreeItem {
 	fileType: vscode.FileType;
 
 	constructor(
