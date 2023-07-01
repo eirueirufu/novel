@@ -11,23 +11,150 @@
     "Programming Languages"
   ],
   "contributes": {
+    "configuration": {
+      "title": "novel自定义配置",
+      "type": "object",
+      "properties": {
+        "novel.highlightWords": {
+          "type": "array",
+          "default": [],
+          "description": "Highlight words in the novel"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "openFile",
+        "title": "打开文件"
+      },
+      {
+        "command": "highlight.select",
+        "title": "显示/取消高亮"
+      },
+      {
+        "command": "characters.refreshEntry",
+        "title": "刷新",
+        "icon": {
+          "light": "media/light/refresh.svg",
+          "dark": "media/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "characters.createFile",
+        "title": "创建文件",
+        "icon": {
+          "light": "media/light/document.svg",
+          "dark": "media/dark/document.svg"
+        }
+      },
+      {
+        "command": "characters.createDirectory",
+        "title": "创建文件夹",
+        "icon": {
+          "light": "media/light/folder.svg",
+          "dark": "media/dark/folder.svg"
+        }
+      },
+      {
+        "command": "characters.deleteEntry",
+        "title": "删除",
+        "icon": {
+          "light": "media/light/edit.svg",
+          "dark": "media/dark/edit.svg"
+        }
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "novel",
+          "title": "Novel",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "views": {
+      "novel": [
+        {
+          "id": "novelCharacters",
+          "name": "人物设定",
+          "icon": "media/dep.svg",
+          "contextualTitle": "人物设定"
+        }
+      ]
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "highlight.select",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "characters.createDirectory",
+          "when": "view == novelCharacters",
+          "group": "navigation"
+        },
+        {
+          "command": "characters.refreshEntry",
+          "when": "view == novelCharacters",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "characters.createFile",
+          "when": "view == novelCharacters && viewItem == directory"
+        },
+        {
+          "command": "characters.createDirectory",
+          "when": "view == novelCharacters && viewItem == directory"
+        },
+        {
+          "command": "characters.deleteEntry",
+          "when": "view == novelCharacters"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "novelCharacters",
+        "contents": "[新建一个人物设定](command:characters.createDirectory)"
+      }
+    ],
     "languages": [
       {
         "id": "novel",
         "extensions": [
-          ".novel"
+          ".novel",
+          ".nv"
         ],
-        "aliases": [
-          "novel"
-        ],
-        "configuration": "./language-configuration.json",
-        "snippets": [
-          {
-            "language": "novel",
-            "path": "./snippets.json"
-          }
-        ]
+        "icon": {
+          "light": "./media/novel.jpg",
+          "dark": "./media/novel.jpg"
+        },
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "novel",
+        "path": "./snippets.json"
       }
     ]
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint \"src/**/*.ts\"",
+    "watch": "tsc -watch -p ./"
+  },
+  "dependencies": {
+    "@types/node": "^20.3.2",
+    "@types/vscode": "^1.79.1",
+    "typescript": "^5.1.6"
   }
 }
