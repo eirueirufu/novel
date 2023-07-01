@@ -45,13 +45,13 @@ export function registerHighlight(context: vscode.ExtensionContext) {
 		for (const highlightWord of highlightWords) {
 			const word = highlightWord[0];
 			const color = highlightWord[1];
-			const regEx = new RegExp(word[0], "g");
+			const regEx = new RegExp(word, "g");
 			const text = activeEditor.document.getText();
 			let match;
 			const array = mp.get(color) ?? [];
 			while ((match = regEx.exec(text))) {
 				const startPos = activeEditor.document.positionAt(match.index);
-				const endPos = activeEditor.document.positionAt(match.index + match[0].length);
+				const endPos = activeEditor.document.positionAt(match.index + word.length);
 				const decoration = { range: new vscode.Range(startPos, endPos) };
 				array.push(decoration);
 			}
@@ -60,7 +60,7 @@ export function registerHighlight(context: vscode.ExtensionContext) {
 		mp.forEach((v, k) => {
 			const decorationType = vscode.window.createTextEditorDecorationType({ color: k });
 			activeEditor.setDecorations(decorationType, v);
-		})
+		});
 	}
 
 	vscode.workspace.onDidChangeConfiguration(event => {
