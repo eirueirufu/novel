@@ -13,11 +13,39 @@
   "contributes": {
     "commands": [
       {
-        "command": "characters.addCharacter",
-        "title": "添加人物",
+        "command": "openFile",
+        "title": "Open File"
+      },
+      {
+        "command": "characters.refreshEntry",
+        "title": "刷新",
+        "icon": {
+          "light": "media/light/refresh.svg",
+          "dark": "media/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "characters.createFile",
+        "title": "创建文件",
+        "icon": {
+          "light": "media/light/document.svg",
+          "dark": "media/dark/document.svg"
+        }
+      },
+      {
+        "command": "characters.createDirectory",
+        "title": "创建文件夹",
         "icon": {
           "light": "media/light/folder.svg",
           "dark": "media/dark/folder.svg"
+        }
+      },
+      {
+        "command": "characters.deleteEntry",
+        "title": "删除",
+        "icon": {
+          "light": "media/light/edit.svg",
+          "dark": "media/dark/edit.svg"
         }
       }
     ],
@@ -43,27 +71,35 @@
     "menus": {
       "view/title": [
         {
-          "command": "characters.addCharacter",
+          "command": "characters.createDirectory",
+          "when": "view == novelCharacters",
+          "group": "navigation"
+        },
+        {
+          "command": "characters.refreshEntry",
           "when": "view == novelCharacters",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "characters.addCharacter",
-          "when": "view == novelCharacters && viewItem == folder",
-          "group": "inline"
+          "command": "characters.createFile",
+          "when": "view == novelCharacters && viewItem == directory"
         },
         {
-          "command": "characters.addCharacter",
-          "when": "view == novelCharacters && viewItem == folder"
+          "command": "characters.createDirectory",
+          "when": "view == novelCharacters && viewItem == directory"
+        },
+        {
+          "command": "characters.deleteEntry",
+          "when": "view == novelCharacters"
         }
       ]
     },
     "viewsWelcome": [
       {
         "view": "novelCharacters",
-        "contents": "[新建一个人物设定](command:characters.addCharacter)"
+        "contents": "[新建一个人物设定](command:characters.createDirectory)"
       }
     ],
     "languages": [

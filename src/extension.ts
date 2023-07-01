@@ -1,23 +1,12 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
+import { registerCommonCmd } from './commonCmd'
 import { registerHighlight } from './heighlight'
+import { registerCharacterTree } from './characterTree'
 
 export function activate(context: vscode.ExtensionContext) {
+	registerCommonCmd(context);
 	registerHighlight(context);
-
-	const storageProvider = new StorageProvider()
-	vscode.window.registerTreeDataProvider('novelCharacters', storageProvider);
-	vscode.commands.registerCommand('characters.addCharacter', () => {
-		vscode.window.showInformationMessage('todo');
-	});
+	registerCharacterTree(context);
 }
 
-class StorageProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
-	getTreeItem(element: vscode.TreeItem): vscode.TreeItem {
-		return element;
-	}
-
-	getChildren(element?: vscode.TreeItem): Thenable<vscode.TreeItem[]> {
-		const mockItems: vscode.TreeItem[] = [{ label: "人物1", contextValue: "folder" }, { label: "人物2", contextValue: "folder" }, { label: "人物3", contextValue: "folder" }];
-		return Promise.resolve(mockItems)
-	}
-}
