@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
 import { registerCommonCmd } from './commonCmd'
 import { registerHighlight } from './heighlight'
 import { registerCharacterTree } from './characterTree'
+import { registerCompletion } from './completion'
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	registerCommonCmd(context);
 	registerHighlight(context);
 	registerCharacterTree(context);
+	registerCompletion(context);
 }
 
