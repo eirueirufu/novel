@@ -18,7 +18,12 @@
         "novel.highlightWords": {
           "type": "array",
           "default": [],
-          "description": "Highlight words in the novel"
+          "description": "高亮配置"
+        },
+        "novel.completionFilePath": {
+          "type": "string",
+          "default": "",
+          "description": "提示文件"
         }
       }
     },
@@ -61,6 +66,14 @@
         "icon": {
           "light": "media/light/edit.svg",
           "dark": "media/dark/edit.svg"
+        }
+      },
+      {
+        "command": "completion.selectConfigFile",
+        "title": "选择提示配置文件",
+        "icon": {
+          "light": "media/light/document.svg",
+          "dark": "media/dark/document.svg"
         }
       }
     ],
@@ -149,6 +162,8 @@
   "dependencies": {
     "@types/node": "^20.3.2",
     "@types/vscode": "^1.79.1",
+    "fuse.js": "^6.6.2",
+    "nodejieba": "^2.6.0",
     "typescript": "^5.1.6"
   }
 }
