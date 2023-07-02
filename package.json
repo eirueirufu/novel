@@ -137,12 +137,6 @@
         },
         "configuration": "./language-configuration.json"
       }
-    ],
-    "snippets": [
-      {
-        "language": "novel",
-        "path": "./snippets.json"
-      }
     ]
   },
   "main": "./out/extension.js",
