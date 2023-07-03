@@ -5,20 +5,23 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 	const configKey = "novel.openaiKey";
 
 	let openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
+	const config = new Configuration({
+		apiKey: openaiKey
+	})
+	let openai = new OpenAIApi(config)
+	const outputChannel = vscode.window.createOutputChannel('novel', 'novel');
+
 	context.subscriptions.push(
 		vscode.workspace.onDidChangeConfiguration(async event => {
 			if (!event.affectsConfiguration(configKey)) {
 				return
 			}
 			openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
+			config.apiKey = openaiKey
+			openai = new OpenAIApi(config)
 		})
 	);
 
-	const config = new Configuration({
-		apiKey: openaiKey
-	})
-	const openai = new OpenAIApi(config)
-	const outputChannel = vscode.window.createOutputChannel('novel', 'novel');
 
 	vscode.commands.registerTextEditorCommand('gpt.quest', async editor => {
 		if (!openaiKey) {
