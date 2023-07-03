@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { StorageTreeItem } from './characterTree';
+import { StorageTreeItem } from './workspaceTree';
 import * as path from 'path';
 
 export function registerHighlight(context: vscode.ExtensionContext) {
