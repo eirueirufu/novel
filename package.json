@@ -24,6 +24,11 @@
           "type": "string",
           "default": "",
           "description": "提示文件"
+        },
+        "novel.openaiKey": {
+          "type": "string",
+          "default": "",
+          "description": "openai的api key，可以自己在opanai官网生成"
         }
       }
     },
@@ -35,6 +40,10 @@
       {
         "command": "highlight.select",
         "title": "显示/取消高亮"
+      },
+      {
+        "command": "gpt.quest",
+        "title": "提问gpt"
       },
       {
         "command": "characters.refreshEntry",
@@ -102,6 +111,11 @@
           "command": "highlight.select",
           "when": "editorLangId == 'novel'",
           "group": "navigation"
+        },
+        {
+          "command": "gpt.quest",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation"
         }
       ],
       "view/title": [
@@ -164,6 +178,7 @@
     "@types/vscode": "^1.79.1",
     "fuse.js": "^6.6.2",
     "nodejieba": "^2.6.0",
+    "openai": "^3.3.0",
     "typescript": "^5.1.6"
   }
 }
