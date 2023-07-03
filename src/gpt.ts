@@ -65,7 +65,7 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 				model: "gpt-3.5-turbo",
 				messages: [{ role: "user", content: "Hello world" }],
 			});
-			outputChannel.append('以下是gpt的回答：\n' + chatCompletion);
+			outputChannel.append('以下是gpt的回答：\n' + chatCompletion.data.choices[0].message?.content);
 		} catch (error) {
 			const msg = error as string
 			outputChannel.append('请求错误：\n' + msg);
