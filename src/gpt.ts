@@ -63,7 +63,7 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		try {
 			const chatCompletion = await openai.createChatCompletion({
 				model: "gpt-3.5-turbo",
-				messages: [{ role: "user", content: "Hello world" }],
+				messages: [{ role: "user", content: text }],
 			});
 			outputChannel.append('以下是gpt的回答：\n' + chatCompletion.data.choices[0].message?.content);
 		} catch (error) {
