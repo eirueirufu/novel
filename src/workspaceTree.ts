@@ -1,41 +1,41 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-export function registerCharacterTree(context: vscode.ExtensionContext) {
-	const characterTreeProvider = new StorageTreeProvider(context);
-	vscode.window.registerTreeDataProvider('novelCharacters', characterTreeProvider);
-	vscode.commands.registerCommand('characters.createFile', async (item: StorageTreeItem) => {
+export function registerWorkspaceTree(context: vscode.ExtensionContext) {
+	const workspaceTreeProvider = new StorageTreeProvider(context);
+	vscode.window.registerTreeDataProvider('novelWorkspace', workspaceTreeProvider);
+	vscode.commands.registerCommand('workspace.createFile', async (item: StorageTreeItem) => {
 		const name = await vscode.window.showInputBox({ title: '文件名称' })
 		if (!name) {
 			return
 		}
 		const newFileUri = vscode.Uri.parse(path.join(item.resourceUri?.path ?? '', name))
 		await vscode.workspace.fs.writeFile(newFileUri, new Uint8Array())
-		return characterTreeProvider.refresh()
+		return workspaceTreeProvider.refresh()
 	});
-	vscode.commands.registerCommand('characters.createDirectory', async (item: StorageTreeItem) => {
+	vscode.commands.registerCommand('workspace.createDirectory', async (item: StorageTreeItem) => {
 		let newDirUri: vscode.Uri
 		const name = await vscode.window.showInputBox({ title: '文件夹名称' })
 		if (!name) {
 			return
 		}
 		if (!item) {
-			newDirUri = vscode.Uri.parse(path.join(characterTreeProvider.storage.path ?? '', name))
+			newDirUri = vscode.Uri.parse(path.join(workspaceTreeProvider.storage.path ?? '', name))
 		} else {
 			newDirUri = vscode.Uri.parse(path.join(item.resourceUri?.path ?? '', name))
 		}
 
 		await vscode.workspace.fs.createDirectory(newDirUri)
-		return characterTreeProvider.refresh()
+		return workspaceTreeProvider.refresh()
 	});
-	vscode.commands.registerCommand('characters.deleteEntry', async (item: StorageTreeItem) => {
+	vscode.commands.registerCommand('workspace.deleteEntry', async (item: StorageTreeItem) => {
 		if (!item || !item.resourceUri) {
 			return
 		}
 		await vscode.workspace.fs.delete(item.resourceUri, { recursive: true })
-		return characterTreeProvider.refresh()
+		return workspaceTreeProvider.refresh()
 	});
-	vscode.commands.registerCommand('characters.refreshEntry', () => characterTreeProvider.refresh());
+	vscode.commands.registerCommand('workspace.refreshEntry', () => workspaceTreeProvider.refresh());
 }
 
 class StorageTreeProvider implements vscode.TreeDataProvider<StorageTreeItem> {

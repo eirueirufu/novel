@@ -46,7 +46,7 @@
         "title": "提问gpt"
       },
       {
-        "command": "characters.refreshEntry",
+        "command": "workspace.refreshEntry",
         "title": "刷新",
         "icon": {
           "light": "media/light/refresh.svg",
@@ -54,24 +54,24 @@
         }
       },
       {
-        "command": "characters.createFile",
-        "title": "创建文件",
+        "command": "workspace.createFile",
+        "title": "新建文件",
         "icon": {
           "light": "media/light/document.svg",
           "dark": "media/dark/document.svg"
         }
       },
       {
-        "command": "characters.createDirectory",
-        "title": "创建文件夹",
+        "command": "workspace.createDirectory",
+        "title": "新建文件夹",
         "icon": {
           "light": "media/light/folder.svg",
           "dark": "media/dark/folder.svg"
         }
       },
       {
-        "command": "characters.deleteEntry",
-        "title": "删除",
+        "command": "workspace.deleteEntry",
+        "title": "永久删除",
         "icon": {
           "light": "media/light/edit.svg",
           "dark": "media/dark/edit.svg"
@@ -98,10 +98,10 @@
     "views": {
       "novel": [
         {
-          "id": "novelCharacters",
-          "name": "人物设定",
+          "id": "novelWorkspace",
+          "name": "全局工作区",
           "icon": "media/dep.svg",
-          "contextualTitle": "人物设定"
+          "contextualTitle": "全局工作区"
         }
       ]
     },
@@ -120,35 +120,35 @@
       ],
       "view/title": [
         {
-          "command": "characters.createDirectory",
-          "when": "view == novelCharacters",
+          "command": "workspace.createDirectory",
+          "when": "view == novelWorkspace",
           "group": "navigation"
         },
         {
-          "command": "characters.refreshEntry",
-          "when": "view == novelCharacters",
+          "command": "workspace.refreshEntry",
+          "when": "view == novelWorkspace",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "characters.createFile",
-          "when": "view == novelCharacters && viewItem == directory"
+          "command": "workspace.createFile",
+          "when": "view == novelWorkspace && viewItem == directory"
         },
         {
-          "command": "characters.createDirectory",
-          "when": "view == novelCharacters && viewItem == directory"
+          "command": "workspace.createDirectory",
+          "when": "view == novelWorkspace && viewItem == directory"
         },
         {
-          "command": "characters.deleteEntry",
-          "when": "view == novelCharacters"
+          "command": "workspace.deleteEntry",
+          "when": "view == novelWorkspace"
         }
       ]
     },
     "viewsWelcome": [
       {
-        "view": "novelCharacters",
-        "contents": "[新建一个人物设定](command:characters.createDirectory)"
+        "view": "novelWorkspace",
+        "contents": "[新建一个文件夹](command:workspace.createDirectory)"
       }
     ],
     "languages": [
