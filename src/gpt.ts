@@ -26,14 +26,20 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		})
 	);
 
+	async function inputApiKey() {
+		openaiKey = await vscode.window.showInputBox({
+			title: '请输入你的api key',
+			prompt: '你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用'
+		}) ?? "";
+
+		await vscode.workspace.getConfiguration().update(configKey, openaiKey);
+	}
+	vscode.commands.registerTextEditorCommand('gpt.config', async () => {
+		await inputApiKey();
+	});
 	vscode.commands.registerTextEditorCommand('gpt.quest', async editor => {
 		if (!openaiKey) {
-			openaiKey = await vscode.window.showInputBox({
-				title: '请输入你的api key',
-				prompt: '你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用'
-			}) ?? "";
-
-			await vscode.workspace.getConfiguration().update(configKey, openaiKey)
+			await inputApiKey();
 			return
 		}
 
