@@ -8,7 +8,6 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 	let openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
 	let client = new OpenAIClient({
 		token: openaiKey,
-		organization: 'org-dXiZKrWii8lND9WMvqr0UoKy',
 	});
 
 	const statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
@@ -23,7 +22,6 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 			const openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
 			client = new OpenAIClient({
 				token: openaiKey,
-				organization: 'org-dXiZKrWii8lND9WMvqr0UoKy',
 			});
 		})
 	);
