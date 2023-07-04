@@ -11,7 +11,7 @@ export function registerHighlight(context: vscode.ExtensionContext) {
 	vscode.commands.registerTextEditorCommand('highlight.select', async editor => {
 		const color = await vscode.window.showInputBox({
 			title: '高亮颜色', value: 'pink', valueSelection: [0, 4],
-			prompt: '[👉选择自己喜欢的颜色](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Colors/Color_picker_tool), 取消时可随意选择颜色'
+			prompt: '[👉选择自己喜欢的颜色](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Colors/Color_picker_tool)'
 		})
 		if (!color) {
 			return
@@ -33,6 +33,22 @@ export function registerHighlight(context: vscode.ExtensionContext) {
 		words.push(...selectedWords)
 		words = words.filter(x => {
 			return !filteredWords.some(y => x[0] === y[0])
+		});
+		await vscode.workspace.getConfiguration().update(configKey, words)
+	});
+	vscode.commands.registerTextEditorCommand('highlight.selectCancel', async editor => {
+		let words = vscode.workspace.getConfiguration().get(configKey) as [string, string][] ?? []
+		let selectedWords: string[] = []
+		for (const selection of editor.selections) {
+			const word = editor.document.getText(selection);
+			if (word.length == 0) {
+				continue
+			}
+			selectedWords.push(word);
+		}
+
+		words = words.filter(x => {
+			return !selectedWords.includes(x[0]);
 		});
 		await vscode.workspace.getConfiguration().update(configKey, words)
 	});

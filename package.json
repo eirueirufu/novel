@@ -39,7 +39,11 @@
       },
       {
         "command": "highlight.select",
-        "title": "显示/取消高亮"
+        "title": "显示高亮"
+      },
+      {
+        "command": "highlight.selectCancel",
+        "title": "取消高亮"
       },
       {
         "command": "gpt.quest",
@@ -108,14 +112,19 @@
     "menus": {
       "editor/context": [
         {
-          "command": "highlight.select",
-          "when": "editorLangId == 'novel'",
-          "group": "navigation"
-        },
-        {
           "command": "gpt.quest",
           "when": "editorLangId == 'novel'",
-          "group": "navigation"
+          "group": "navigation@1"
+        },
+        {
+          "command": "highlight.select",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation@2"
+        },
+        {
+          "command": "highlight.selectCancel",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation@3"
         }
       ],
       "view/title": [
