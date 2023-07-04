@@ -9,7 +9,7 @@ export function registerWorkspaceTree(context: vscode.ExtensionContext) {
 		if (!name) {
 			return
 		}
-		const newFileUri = vscode.Uri.parse(path.join(item.resourceUri?.path ?? '', name))
+		const newFileUri = vscode.Uri.parse(path.posix.join(item.resourceUri?.path ?? '', name))
 		await vscode.workspace.fs.writeFile(newFileUri, new Uint8Array())
 		return workspaceTreeProvider.refresh()
 	});
@@ -20,9 +20,9 @@ export function registerWorkspaceTree(context: vscode.ExtensionContext) {
 			return
 		}
 		if (!item) {
-			newDirUri = vscode.Uri.parse(path.join(workspaceTreeProvider.storage.path ?? '', name))
+			newDirUri = vscode.Uri.parse(path.posix.join(workspaceTreeProvider.storage.path ?? '', name))
 		} else {
-			newDirUri = vscode.Uri.parse(path.join(item.resourceUri?.path ?? '', name))
+			newDirUri = vscode.Uri.parse(path.posix.join(item.resourceUri?.path ?? '', name))
 		}
 
 		await vscode.workspace.fs.createDirectory(newDirUri)
@@ -47,7 +47,7 @@ class StorageTreeProvider implements vscode.TreeDataProvider<StorageTreeItem> {
 		const workspaceRoot = (vscode.workspace.workspaceFolders && (vscode.workspace.workspaceFolders.length > 0))
 			? vscode.workspace.workspaceFolders[0].uri.fsPath : 'unknown';
 		const dirname = path.parse(workspaceRoot).name
-		const storagePath = path.join(context.globalStorageUri.path, dirname)
+		const storagePath = path.posix.join(context.globalStorageUri.path, dirname)
 		const storageUri = vscode.Uri.parse(storagePath)
 		vscode.workspace.fs.createDirectory(storageUri)
 		this.storage = storageUri
@@ -68,7 +68,7 @@ class StorageTreeProvider implements vscode.TreeDataProvider<StorageTreeItem> {
 		if (element.resourceUri === this.storage) {
 			return undefined;
 		}
-		const parentPath = path.join(element.resourceUri!.path, "..")
+		const parentPath = path.posix.join(element.resourceUri!.path, "..")
 		const parentUri = vscode.Uri.parse(parentPath)
 		return this._getItem(parentUri)
 	}
@@ -86,7 +86,7 @@ class StorageTreeProvider implements vscode.TreeDataProvider<StorageTreeItem> {
 		for (const file of files) {
 			const filename = file[0];
 			const filetype = file[1];
-			const itemPath = vscode.Uri.parse(path.join(uri.path, file[0]));
+			const itemPath = vscode.Uri.parse(path.posix.join(uri.path, file[0]));
 			const item = new StorageTreeItem(itemPath, filename, filetype);
 			items.push(item)
 		}

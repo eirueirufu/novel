@@ -46,7 +46,7 @@ export async function registerCompletion(context: vscode.ExtensionContext) {
 	async function getCompletionWords() {
 		let completionFilePath = vscode.workspace.getConfiguration().get(configKey) as string
 		if (!completionFilePath) {
-			completionFilePath = context.asAbsolutePath(path.join('media', 'completion'));
+			completionFilePath = context.asAbsolutePath(path.posix.join('media', 'completion'));
 		}
 		const data = await vscode.workspace.fs.readFile(vscode.Uri.parse(completionFilePath))
 		const textDecoder = new TextDecoder();
