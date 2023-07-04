@@ -19,7 +19,7 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 			if (!event.affectsConfiguration(configKey)) {
 				return
 			}
-			const openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
+			openaiKey = vscode.workspace.getConfiguration().get(configKey) as string;
 			client = new OpenAIClient({
 				token: openaiKey,
 			});
