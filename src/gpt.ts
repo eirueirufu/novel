@@ -1,35 +1,41 @@
 import * as vscode from 'vscode'
-import { Configuration, OpenAIApi } from 'openai'
+import { OpenAIClient } from '@fern-api/openai'
 
 export async function registerGpt(context: vscode.ExtensionContext) {
 	const configKey = "novel.openaiKey";
 
-	let openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
-	const config = new Configuration({
-		apiKey: openaiKey
-	})
-	let openai = new OpenAIApi(config)
 	const outputChannel = vscode.window.createOutputChannel('novel', 'novel');
+	let openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
+	let client = new OpenAIClient({
+		token: openaiKey,
+		organization: 'org-dXiZKrWii8lND9WMvqr0UoKy',
+	});
+
+	const statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
+	statusBarItem.text = "$(loading~spin) GPT提问中...";
+	statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
 
 	context.subscriptions.push(
 		vscode.workspace.onDidChangeConfiguration(async event => {
 			if (!event.affectsConfiguration(configKey)) {
 				return
 			}
-			openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
-			config.apiKey = openaiKey
-			openai = new OpenAIApi(config)
+			const openaiKey = vscode.workspace.getConfiguration().get(configKey) as string
+			client = new OpenAIClient({
+				token: openaiKey,
+				organization: 'org-dXiZKrWii8lND9WMvqr0UoKy',
+			});
 		})
 	);
 
-
 	vscode.commands.registerTextEditorCommand('gpt.quest', async editor => {
 		if (!openaiKey) {
-			const apiKey = await vscode.window.showInputBox({
+			openaiKey = await vscode.window.showInputBox({
 				title: '请输入你的api key',
 				prompt: '你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用'
-			});
-			await vscode.workspace.getConfiguration().update(configKey, apiKey)
+			}) ?? "";
+
+			await vscode.workspace.getConfiguration().update(configKey, openaiKey)
 			return
 		}
 
@@ -51,27 +57,41 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		}
 
 		if (text.length > 0) {
-			questText = questText + '\n```plaintext\n' + text + '\n```'
+			questText = questText + '\n' + text + '\n'
 		}
 
-		const statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
-		statusBarItem.text = "$(loading~spin) GPT提问中...";
-		statusBarItem.backgroundColor = new vscode.ThemeColor("statusBarItem.warningBackground");
+
 		statusBarItem.show();
 		outputChannel.clear();
+		outputChannel.show();
+		outputChannel.append("Q:\n");
+		outputChannel.append(questText + "\n");
+		outputChannel.append("A:\n");
 
 		try {
-			const chatCompletion = await openai.createChatCompletion({
+			await client.chat.createCompletion({
 				model: "gpt-3.5-turbo",
-				messages: [{ role: "user", content: text }],
+				messages: [
+					{ role: "system", content: "你是一个专业的网文作者" },
+					{ role: "user", content: questText }
+				],
+				stream: true,
+			}, (data) => {
+				const content = data.choices[0].delta.content;
+				if (content) {
+					outputChannel.append(content);
+				}
+			}, {
+				onError: (error) => {
+					const msg = error as string
+					outputChannel.append('请求错误：\n' + msg);
+				},
+				onFinish: () => {
+					outputChannel.append("\n回答完毕");
+				}
 			});
-			outputChannel.append('以下是gpt的回答：\n' + chatCompletion.data.choices[0].message?.content);
-		} catch (error) {
-			const msg = error as string
-			outputChannel.append('请求错误：\n' + msg);
 		} finally {
-			outputChannel.show();
-			statusBarItem.dispose();
+			statusBarItem.hide();
 		}
 	});
 }
