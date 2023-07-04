@@ -50,6 +50,10 @@
         "title": "提问gpt"
       },
       {
+        "command": "gpt.config",
+        "title": "apikey配置"
+      },
+      {
         "command": "workspace.refreshEntry",
         "title": "刷新",
         "icon": {
@@ -125,6 +129,11 @@
           "command": "highlight.selectCancel",
           "when": "editorLangId == 'novel'",
           "group": "navigation@3"
+        },
+        {
+          "command": "gpt.config",
+          "when": "editorLangId == 'novel'",
+          "group": "navigation@4"
         }
       ],
       "view/title": [
