@@ -66,30 +66,28 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		outputChannel.append(questText + "\n");
 		outputChannel.append("A:\n");
 
-		try {
-			await client.chat.createCompletion({
-				model: "gpt-3.5-turbo",
-				messages: [
-					{ role: "system", content: "你是一个专业的网文作者" },
-					{ role: "user", content: questText }
-				],
-				stream: true,
-			}, (data) => {
-				const content = data.choices[0].delta.content;
-				if (content) {
-					outputChannel.append(content);
-				}
-			}, {
-				onError: (error) => {
-					const msg = error as string
-					outputChannel.append('请求错误：\n' + msg);
-				},
-				onFinish: () => {
-					outputChannel.append("\n回答完毕");
-				}
-			});
-		} finally {
-			statusBarItem.hide();
-		}
+		await client.chat.createCompletion({
+			model: "gpt-3.5-turbo",
+			messages: [
+				{ role: "system", content: "你是一个专业的网文作者" },
+				{ role: "user", content: questText }
+			],
+			stream: true,
+		}, (data) => {
+			const content = data.choices[0].delta.content;
+			if (content) {
+				outputChannel.append(content);
+			}
+		}, {
+			onError: (error) => {
+				const msg = error as string
+				outputChannel.append('请求错误：\n' + msg);
+				statusBarItem.hide();
+			},
+			onFinish: () => {
+				outputChannel.append("\n回答完毕");
+				statusBarItem.hide();
+			}
+		});
 	});
 }
