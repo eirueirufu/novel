@@ -5,7 +5,8 @@
   "version": "0.0.1",
   "publisher": "eirueirufu",
   "engines": {
-    "vscode": "^1.28.0"
+    "vscode": "^1.28.0",
+    "node": ">=12.0.0"
   },
   "categories": [
     "Programming Languages"
@@ -186,10 +187,17 @@
   },
   "main": "./out/extension.js",
   "scripts": {
+    "package": "npx vsce package",
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "lint": "eslint \"src/**/*.ts\"",
-    "watch": "tsc -watch -p ./"
+    "lint": "gts lint",
+    "watch": "tsc -watch -p ./",
+    "clean": "gts clean",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
   },
   "dependencies": {
     "@fern-api/openai": "^0.0.32",
@@ -197,7 +205,10 @@
     "@types/vscode": "^1.79.1",
     "fuse.js": "^6.6.2",
     "nodejieba": "^2.6.0",
-    "openai": "^3.3.0",
-    "typescript": "^5.1.6"
+    "openai": "^3.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "gts": "^3.1.1"
   }
 }

@@ -1,19 +1,17 @@
 {
-	"compilerOptions": {
-		"module": "commonjs",
-		"target": "es2020",
-		"lib": [
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "out",
+    "module": "commonjs",
+    "lib": [
 			"es2020",
 			"dom"
 		],
-		"outDir": "out",
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true,
-		"esModuleInterop": true
-	},
-	"exclude": [
-		"node_modules",
-		".vscode-test"
-	]
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
 }
