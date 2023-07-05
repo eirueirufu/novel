@@ -1,6 +1,6 @@
 name: ci
 
-on: [pull_request, push]
+on: [pull_request]
 
 jobs:
     build:
@@ -15,7 +15,7 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest, windows-latest, macos-latest]
-                version: ['stable', 'insiders']
+                version: ['stable']
 
         steps:
             - name: Clone repository

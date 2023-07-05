@@ -1,7 +1,9 @@
 # novel
 
-![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)
-
+<p align="left">
+<a href="https://github.com/eirueirufu/novel"><img src="https://github.com/eirueirufu/novel/workflows/ci/badge.svg?branch=main" alt="CI"></a>
+<a href="https://github.com/google/gts"><img src="https://img.shields.io/badge/code%20style-google-blueviolet.svg" alt="Code Style: Google"></a>
+</p>
 
 ~~你还在为文笔太烂而烦恼吗，还在为没有灵感而发愁吗？~~
 
