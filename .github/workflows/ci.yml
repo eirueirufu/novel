@@ -1,6 +1,6 @@
 name: ci
 
-on: [pull_request]
+on: [pull_request, push]
 
 jobs:
     build:
@@ -14,8 +14,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, windows-latest]
-                version: ['stable']
+                os: [ubuntu-latest, windows-latest, macos-latest]
+                version: ['stable', 'insiders']
 
         steps:
             - name: Clone repository
@@ -27,25 +27,30 @@ jobs:
                   node-version: '18'
                   cache: 'npm'
 
+            - name: List files before npm ci
+                run: ls -R
+
             - name: Install dependencies
               run: npm ci
 
+            - name: List files after npm ci
+              run: ls -R
+
             - name: Compile
               run: npm run compile
-
-            # - name: Run unit tests
-            #   run: npm run unit-test
 
             # - name: Run tests (Linux)
             #   run: xvfb-run -a npm run test
             #   if: ${{ matrix.os == 'ubuntu-latest' }}
             #   env:
             #       CODE_VERSION: ${{ matrix.version }}
+            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
             # - name: Run tests (Windows/Mac)
             #   run: npm run test
             #   if: ${{ matrix.os != 'ubuntu-latest' }}
             #   env:
             #       CODE_VERSION: ${{ matrix.version }}
+            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
 
             # - name: Lint check
             #   run: npm run lint
