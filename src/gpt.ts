@@ -12,8 +12,10 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		token: openaiKey,
 	});
 
-	const statusBarItem: vscode.StatusBarItem =
-		vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 9999);
+	const statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(
+		vscode.StatusBarAlignment.Left,
+		9999
+	);
 	statusBarItem.text = '$(loading~spin) GPT提问中...';
 	statusBarItem.backgroundColor = new vscode.ThemeColor(
 		'statusBarItem.warningBackground'
@@ -37,7 +39,8 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		openaiKey =
 			(await vscode.window.showInputBox({
 				title: '请输入你的api key',
-				prompt: '你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用',
+				prompt:
+					'你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用',
 			})) ?? '';
 
 		await vscode.workspace.getConfiguration().update(configKey, openaiKey);

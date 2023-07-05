@@ -1,6 +1,6 @@
 name: ci
 
-on: [pull_request]
+on: [pull_request, push]
 
 jobs:
     build:
@@ -33,19 +33,19 @@ jobs:
             - name: Compile
               run: npm run compile
 
-            # - name: Run tests (Linux)
-            #   run: xvfb-run -a npm run test
-            #   if: ${{ matrix.os == 'ubuntu-latest' }}
-            #   env:
-            #       CODE_VERSION: ${{ matrix.version }}
-            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
-            # - name: Run tests (Windows/Mac)
-            #   run: npm run test
-            #   if: ${{ matrix.os != 'ubuntu-latest' }}
-            #   env:
-            #       CODE_VERSION: ${{ matrix.version }}
-            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
+            - name: Run tests (Linux)
+              run: xvfb-run -a npm run test
+              if: ${{ matrix.os == 'ubuntu-latest' }}
+              env:
+                  CODE_VERSION: ${{ matrix.version }}
+                  VSCODEGO_BEFORE_RELEASE_TESTS: true
+            - name: Run tests (Windows/Mac)
+              run: npm run test
+              if: ${{ matrix.os != 'ubuntu-latest' }}
+              env:
+                  CODE_VERSION: ${{ matrix.version }}
+                  VSCODEGO_BEFORE_RELEASE_TESTS: true
 
-            # - name: Lint check
-            #   run: npm run lint
-            #   if: ${{ matrix.os == 'ubuntu-latest' && matrix.version == 'stable' }}
+            - name: Lint check
+              run: npm run lint
+              if: ${{ matrix.os == 'ubuntu-latest' && matrix.version == 'stable' }}
