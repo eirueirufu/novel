@@ -9,5 +9,8 @@
       "dom"
     ],
     "esModuleInterop": true
-  }
+  },
+  "exclude": [
+    "out"
+  ]
 }
