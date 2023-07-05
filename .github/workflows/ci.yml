@@ -25,16 +25,9 @@ jobs:
               uses: actions/setup-node@v3
               with:
                   node-version: '18'
-                  cache: 'npm'
-
-            - name: List files before npm ci
-              run: ls -R
 
             - name: Install dependencies
               run: npm ci
-
-            - name: List files after npm ci
-              run: ls -R
 
             - name: Compile
               run: npm run compile
