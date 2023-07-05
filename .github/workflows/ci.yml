@@ -14,7 +14,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, windows-latest]
+                os: [ubuntu-latest, windows-latest, macos-latest]
                 version: ['stable']
 
         steps:
@@ -33,19 +33,18 @@ jobs:
             - name: Compile
               run: npm run compile
 
-            # - name: Run unit tests
-            #   run: npm run unit-test
-
             # - name: Run tests (Linux)
             #   run: xvfb-run -a npm run test
             #   if: ${{ matrix.os == 'ubuntu-latest' }}
             #   env:
             #       CODE_VERSION: ${{ matrix.version }}
+            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
             # - name: Run tests (Windows/Mac)
             #   run: npm run test
             #   if: ${{ matrix.os != 'ubuntu-latest' }}
             #   env:
             #       CODE_VERSION: ${{ matrix.version }}
+            #       VSCODEGO_BEFORE_RELEASE_TESTS: true
 
             # - name: Lint check
             #   run: npm run lint

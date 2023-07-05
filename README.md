@@ -1,5 +1,10 @@
 # novel
 
+<p align="left">
+<a href="https://github.com/eirueirufu/novel"><img src="https://github.com/eirueirufu/novel/workflows/ci/badge.svg?branch=main" alt="CI"></a>
+<a href="https://github.com/google/gts"><img src="https://img.shields.io/badge/code%20style-google-blueviolet.svg" alt="Code Style: Google"></a>
+</p>
+
 ~~你还在为文笔太烂而烦恼吗，还在为没有灵感而发愁吗？~~
 
 为各位~~扑街~~白金大神提供的**网文写作**VSCode插件，提供高亮、提示、gpt等功能。
