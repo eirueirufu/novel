@@ -13,7 +13,8 @@ export function registerHighlight(context: vscode.ExtensionContext) {
 				title: '高亮颜色',
 				value: 'pink',
 				valueSelection: [0, 4],
-				prompt: '[👉选择自己喜欢的颜色](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Colors/Color_picker_tool)',
+				prompt:
+					'[👉选择自己喜欢的颜色](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Colors/Color_picker_tool)',
 			});
 			if (!color) {
 				return;
