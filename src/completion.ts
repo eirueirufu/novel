@@ -51,11 +51,11 @@ export async function registerCompletion(context: vscode.ExtensionContext) {
 			.get(configKey) as string;
 		if (!completionFilePath) {
 			completionFilePath = context.asAbsolutePath(
-				path.posix.join('media', 'completion')
+				path.join('media', 'completion')
 			);
 		}
 		const data = await vscode.workspace.fs.readFile(
-			vscode.Uri.parse(completionFilePath)
+			vscode.Uri.file(completionFilePath)
 		);
 		const textDecoder = new TextDecoder();
 		const result = textDecoder.decode(data);
