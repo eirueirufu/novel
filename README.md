@@ -20,12 +20,12 @@
 ### 高亮
 
 可自由选择与取消高亮关键词，比如人物名称等
-![高亮](./media/readme/%E9%AB%98%E4%BA%AE.gif)
+![高亮](./media/readme/highlight.gif)
 
 ### 提示
 
 根据输入词提示，可自己配置提示词
-![提示](./media/readme/%E6%8F%90%E7%A4%BA.gif)
+![提示](./media/readme/completion.gif)
 
 ### gpt提问
 
