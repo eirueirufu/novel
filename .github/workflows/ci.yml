@@ -2,6 +2,8 @@ name: ci
 
 on:
     push:
+        branches:
+            - main
     pull_request:
         branches:
             - main
@@ -41,6 +43,10 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Lint check
+              run: npm run lint
+              if: ${{ matrix.os == 'ubuntu-latest' && matrix.version == 'stable' }}
+
             - name: Compile
               run: npm run compile
 
@@ -57,6 +63,8 @@ jobs:
                   CODE_VERSION: ${{ matrix.version }}
                   VSCODEGO_BEFORE_RELEASE_TESTS: true
 
-            - name: Lint check
-              run: npm run lint
-              if: ${{ matrix.os == 'ubuntu-latest' && matrix.version == 'stable' }}
+            - name: Publish
+              if: success() && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+              run: vsce publish ${GITHUB_REF#refs/tags/}
+              env:
+                  VSCE_PAT: ${{ secrets.VSCE_PAT }}
