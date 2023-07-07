@@ -8,6 +8,8 @@ on:
         branches:
             - main
     workflow_dispatch:
+        branches:
+            - main
 
 jobs:
     build:
@@ -64,7 +66,7 @@ jobs:
                   VSCODEGO_BEFORE_RELEASE_TESTS: true
 
             - name: Publish
-              if: (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') && matrix.os == 'ubuntu-latest'
+              if: github.event_name == 'workflow_dispatch' && matrix.os == 'ubuntu-latest'
               run: |
                   npm install -g @vscode/vsce
                   vsce publish -p $VSCE_PAT
