@@ -4,8 +4,6 @@ on:
     push:
         branches:
             - main
-        tags:
-            - v*
     pull_request:
         branches:
             - main
@@ -66,11 +64,9 @@ jobs:
                   VSCODEGO_BEFORE_RELEASE_TESTS: true
 
             - name: Publish
-              if: success() && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest'
+              if: (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch') && matrix.os == 'ubuntu-latest'
               run: |
                   npm install -g @vscode/vsce
-                  git config --global user.name 'eirueirufu'
-                  git config --global user.email '731358689@qq.com'
-                  vsce publish -p $VSCE_PAT ${GITHUB_REF#refs/tags/}
+                  vsce publish -p $VSCE_PAT
               env:
                   VSCE_PAT: ${{ secrets.VSCE_PAT }}
