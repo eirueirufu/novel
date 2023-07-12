@@ -3,7 +3,11 @@ import * as vscode from 'vscode';
 export function registerHighlight(context: vscode.ExtensionContext) {
 	const configKey = 'novel.highlightWords';
 	const decorationMap = new Map<string, vscode.TextEditorDecorationType>();
-	let highlightWords: [string, string][] = [];
+	let highlightWords: [string, string][] =
+		(vscode.workspace.getConfiguration().get(configKey) as [
+			string,
+			string
+		][]) ?? [];
 	let timeout: NodeJS.Timer | undefined = undefined;
 	triggerUpdateDecorations(true);
 	vscode.commands.registerTextEditorCommand(
