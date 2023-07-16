@@ -39,6 +39,7 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		openaiKey =
 			(await vscode.window.showInputBox({
 				title: '请输入你的api key',
+				password: true,
 				prompt:
 					'你可以在👉[官网](https://platform.openai.com/account/api-keys)里生成自己的api key，本插件不会保存你的api key，请放心使用',
 			})) ?? '';

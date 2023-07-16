@@ -2,7 +2,7 @@
   "name": "novel",
   "displayName": "novel",
   "description": "网文写作插件，提供高亮、提示、gpt等功能",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "eirueirufu",
   "icon": "media/novel.png",
   "engines": {
