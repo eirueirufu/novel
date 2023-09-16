@@ -1,165 +1,179 @@
 {
-  "name": "novel",
-  "displayName": "novel",
-  "description": "网文写作插件，提供高亮、提示、gpt等功能",
-  "version": "0.1.2",
-  "publisher": "eirueirufu",
-  "icon": "media/novel.png",
-  "engines": {
-    "vscode": "^1.67.0",
-    "node": ">=12.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/eirueirufu/novel"
-  },
-  "activationEvents": [
-    "onLanguage:novel"
-  ],
-  "categories": [
-    "Programming Languages"
-  ],
-  "files": [
-    "media/completion"
-  ],
-  "contributes": {
-    "configuration": {
-      "title": "novel自定义配置",
-      "type": "object",
-      "properties": {
-        "novel.highlightWords": {
-          "type": "array",
-          "default": [],
-          "description": "高亮配置"
-        },
-        "novel.completionFilePath": {
-          "type": "string",
-          "default": "",
-          "description": "提示文件"
-        },
-        "novel.openaiKey": {
-          "type": "string",
-          "default": "",
-          "description": "openai的api key，可以自己在opanai官网生成"
-        }
-      }
-    },
-    "commands": [
-      {
-        "command": "openFile",
-        "title": "打开文件"
-      },
-      {
-        "command": "highlight.select",
-        "title": "显示高亮"
-      },
-      {
-        "command": "highlight.selectCancel",
-        "title": "取消高亮"
-      },
-      {
-        "command": "gpt.quest",
-        "title": "提问gpt"
-      },
-      {
-        "command": "gpt.config",
-        "title": "apikey配置"
-      },
-      {
-        "command": "completion.selectConfigFile",
-        "title": "选择提示配置文件",
-        "icon": {
-          "light": "media/light/document.svg",
-          "dark": "media/dark/document.svg"
-        }
-      }
-    ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "novel",
-          "title": "Novel",
-          "icon": "media/dep.svg"
-        }
-      ]
-    },
-    "menus": {
-      "editor/context": [
-        {
-          "command": "gpt.quest",
-          "when": "editorLangId == 'novel'",
-          "group": "navigation@1"
-        },
-        {
-          "command": "highlight.select",
-          "when": "editorLangId == 'novel'",
-          "group": "navigation@2"
-        },
-        {
-          "command": "highlight.selectCancel",
-          "when": "editorLangId == 'novel'",
-          "group": "navigation@3"
-        },
-        {
-          "command": "gpt.config",
-          "when": "editorLangId == 'novel'",
-          "group": "navigation@4"
-        }
-      ]
-    },
-    "languages": [
-      {
-        "id": "novel",
-        "extensions": [
-          ".novel",
-          ".nv"
-        ],
-        "icon": {
-          "light": "media/light/novel.png",
-          "dark": "media/dark/novel.png"
-        },
-        "configuration": "./language-configuration.json"
-      }
-    ]
-  },
-  "main": "./out/extension.js",
-  "scripts": {
-    "package": "npx vsce package",
-    "compile": "tsc -p ./",
-    "lint": "gts lint src/",
-    "watch": "tsc -watch -p ./",
-    "clean": "gts clean",
-    "posttest": "npm run lint",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "test": "npm run compile && node ./out/test/runTest.js",
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
-  },
-  "dependencies": {
-    "@fern-api/openai": "^0.0.32",
-    "@types/node": "^16.11.7",
-    "@types/vscode": "1.67.0",
-    "@vscode/test-electron": "^2.3.3",
-    "fuse.js": "^6.6.2",
-    "glob": "^7.1.4",
-    "mocha": "^10.2.0"
-  },
-  "devDependencies": {
-    "@types/glob": "7.1.3",
-    "@types/mocha": "7.0.2",
-    "@types/node": "^16.11.7",
-    "@types/vscode": "1.67.0",
-    "@typescript-eslint/eslint-plugin": "^5.42.0",
-    "@typescript-eslint/parser": "^5.42.0",
-    "@vscode/test-electron": "^1.6.1",
-    "@vscode/vsce": "2.19.0",
-    "esbuild": "^0.18.11",
-    "eslint": "^8.26.0",
-    "gts": "^3.1.1",
-    "prettier": "2.2.1",
-    "source-map-support": "^0.5.12",
-    "typescript": "^5.1.6"
-  }
+	"name": "novel",
+	"displayName": "novel",
+	"description": "网文写作插件，提供高亮、提示、gpt等功能",
+	"version": "0.2.0",
+	"publisher": "eirueirufu",
+	"icon": "media/novel.png",
+	"engines": {
+		"vscode": "^1.67.0",
+		"node": ">=12.0.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/eirueirufu/novel"
+	},
+	"activationEvents": [
+		"onLanguage:novel"
+	],
+	"categories": [
+		"Programming Languages"
+	],
+	"files": [
+		"media/completion"
+	],
+	"contributes": {
+		"configuration": {
+			"title": "novel自定义配置",
+			"type": "object",
+			"properties": {
+				"novel.highlightWords": {
+					"type": "array",
+					"default": [],
+					"description": "高亮配置"
+				},
+				"novel.completionFilePath": {
+					"type": "string",
+					"default": "",
+					"description": "提示文件"
+				},
+				"novel.openaiKey": {
+					"type": "string",
+					"default": "",
+					"description": "openai的api key，可以自己在opanai官网生成"
+				},
+				"novel.openaiBaseURL": {
+					"type": "string",
+					"description": "自定义openai的请求地址"
+				},
+				"novel.gptModel": {
+					"type": "string",
+					"default": "gpt-3.5-turbo",
+					"description": "gpt模型"
+				},
+				"novel.gptChatSystem": {
+					"type": "string",
+					"default": "你是一个专业的网文作者",
+					"description": "gpt聊天system设定"
+				}
+			}
+		},
+		"commands": [
+			{
+				"command": "openFile",
+				"title": "打开文件"
+			},
+			{
+				"command": "highlight.select",
+				"title": "显示高亮"
+			},
+			{
+				"command": "highlight.selectCancel",
+				"title": "取消高亮"
+			},
+			{
+				"command": "gpt.quest",
+				"title": "提问gpt"
+			},
+			{
+				"command": "gpt.config",
+				"title": "apikey配置"
+			},
+			{
+				"command": "completion.selectConfigFile",
+				"title": "选择提示配置文件",
+				"icon": {
+					"light": "media/light/document.svg",
+					"dark": "media/dark/document.svg"
+				}
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "novel",
+					"title": "Novel",
+					"icon": "media/dep.svg"
+				}
+			]
+		},
+		"menus": {
+			"editor/context": [
+				{
+					"command": "gpt.quest",
+					"when": "editorLangId == 'novel'",
+					"group": "navigation@1"
+				},
+				{
+					"command": "highlight.select",
+					"when": "editorLangId == 'novel'",
+					"group": "navigation@2"
+				},
+				{
+					"command": "highlight.selectCancel",
+					"when": "editorLangId == 'novel'",
+					"group": "navigation@3"
+				},
+				{
+					"command": "gpt.config",
+					"when": "editorLangId == 'novel'",
+					"group": "navigation@4"
+				}
+			]
+		},
+		"languages": [
+			{
+				"id": "novel",
+				"extensions": [
+					".novel",
+					".nv"
+				],
+				"icon": {
+					"light": "media/light/novel.png",
+					"dark": "media/dark/novel.png"
+				},
+				"configuration": "./language-configuration.json"
+			}
+		]
+	},
+	"main": "./out/extension.js",
+	"scripts": {
+		"package": "npx vsce package",
+		"compile": "tsc -p ./",
+		"lint": "gts lint src/",
+		"watch": "tsc -watch -p ./",
+		"clean": "gts clean",
+		"posttest": "npm run lint",
+		"format": "prettier --write \"src/**/*.ts\"",
+		"test": "npm run compile && node ./out/test/runTest.js",
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild": "npm run esbuild-base -- --sourcemap",
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
+	},
+	"dependencies": {
+		"@types/node": "^16.11.7",
+		"@types/vscode": "1.67.0",
+		"@vscode/test-electron": "^2.3.3",
+		"fuse.js": "^6.6.2",
+		"glob": "^7.1.4",
+		"mocha": "^10.2.0",
+		"openai": "^4.7.1"
+	},
+	"devDependencies": {
+		"@types/glob": "7.1.3",
+		"@types/mocha": "7.0.2",
+		"@types/node": "^16.11.7",
+		"@types/vscode": "1.67.0",
+		"@typescript-eslint/eslint-plugin": "^5.42.0",
+		"@typescript-eslint/parser": "^5.42.0",
+		"@vscode/test-electron": "^1.6.1",
+		"@vscode/vsce": "2.19.0",
+		"esbuild": "^0.18.11",
+		"eslint": "^8.26.0",
+		"gts": "^3.1.1",
+		"prettier": "2.2.1",
+		"source-map-support": "^0.5.12",
+		"typescript": "^5.1.6"
+	}
 }

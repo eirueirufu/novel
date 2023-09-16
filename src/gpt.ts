@@ -1,16 +1,23 @@
 import * as vscode from 'vscode';
-import {OpenAIClient} from '@fern-api/openai';
+import OpenAI from 'openai';
 
 export async function registerGpt(context: vscode.ExtensionContext) {
 	const configKey = 'novel.openaiKey';
+	const baseURL = 'novel.openaiBaseURL';
+	const gptModel = 'novel.gptModel';
+	const gptChatSystem = 'novel.gptChatSystem';
+
+	const newOpenai = () => {
+		const url = vscode.workspace.getConfiguration().get(baseURL) as string;
+		return new OpenAI({
+			timeout: 10000,
+			apiKey: vscode.workspace.getConfiguration().get(configKey),
+			baseURL: url ? url : undefined,
+		});
+	};
 
 	const outputChannel = vscode.window.createOutputChannel('novel', 'novel');
-	let openaiKey = vscode.workspace
-		.getConfiguration()
-		.get(configKey) as string;
-	let client = new OpenAIClient({
-		token: openaiKey,
-	});
+	let openai = newOpenai();
 
 	const statusBarItem: vscode.StatusBarItem = vscode.window.createStatusBarItem(
 		vscode.StatusBarAlignment.Left,
@@ -23,20 +30,18 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.workspace.onDidChangeConfiguration(async event => {
-			if (!event.affectsConfiguration(configKey)) {
+			if (
+				!event.affectsConfiguration(configKey) &&
+				!event.affectsConfiguration(baseURL)
+			) {
 				return;
 			}
-			openaiKey = vscode.workspace
-				.getConfiguration()
-				.get(configKey) as string;
-			client = new OpenAIClient({
-				token: openaiKey,
-			});
+			openai = newOpenai();
 		})
 	);
 
 	async function inputApiKey() {
-		openaiKey =
+		const openaiKey =
 			(await vscode.window.showInputBox({
 				title: '请输入你的api key',
 				password: true,
@@ -50,7 +55,7 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		await inputApiKey();
 	});
 	vscode.commands.registerTextEditorCommand('gpt.quest', async editor => {
-		if (!openaiKey) {
+		if (!vscode.workspace.getConfiguration().get(configKey)) {
 			await inputApiKey();
 			return;
 		}
@@ -84,32 +89,29 @@ export async function registerGpt(context: vscode.ExtensionContext) {
 		outputChannel.append(questText + '\n');
 		outputChannel.append('A:\n');
 
-		await client.chat.createCompletion(
-			{
-				model: 'gpt-3.5-turbo',
+		try {
+			const chatCompletion = await openai.chat.completions.create({
+				model: vscode.workspace
+					.getConfiguration()
+					.get(gptModel) as string,
+				stream: true,
 				messages: [
-					{role: 'system', content: '你是一个专业的网文作者'},
+					{
+						role: 'system',
+						content: vscode.workspace
+							.getConfiguration()
+							.get(gptChatSystem) as string,
+					},
 					{role: 'user', content: questText},
 				],
-				stream: true,
-			},
-			data => {
-				const content = data.choices[0].delta.content;
-				if (content) {
-					outputChannel.append(content);
-				}
-			},
-			{
-				onError: error => {
-					const msg = error as string;
-					outputChannel.append('请求错误：\n' + msg);
-					statusBarItem.hide();
-				},
-				onFinish: () => {
-					outputChannel.append('\n回答完毕');
-					statusBarItem.hide();
-				},
+			});
+			for await (const x of chatCompletion) {
+				outputChannel.append(x.choices[0].delta.content ?? '');
 			}
-		);
+		} catch (error) {
+			outputChannel.append(JSON.stringify(error));
+		} finally {
+			statusBarItem.hide();
+		}
 	});
 }
