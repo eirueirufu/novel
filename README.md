@@ -37,6 +37,18 @@
 ![gpt1](./media/readme/gpt1.gif)
 ![gpt2](./media/readme/gpt2.gif)
 
+#### 自定义配置
+
+在工作区.vscode目录下的settings.json配置文件中，可以自定义gpt相关的配置
+```json
+{
+    "novel.openaiKey": "your openaiKey",
+    "novel.openaiBaseURL": "https://your-proxy.com/v1",
+    "novel.gptChatSystem": "See https://platform.openai.com/docs/guides/gpt/chat-completions-api",
+    "novel.gptModel": "See https://platform.openai.com/docs/models/overview",
+}
+```
+
 ## 其他
 
 有问题，改进意见可以在[issue](https://github.com/eirueirufu/novel/issues)里提哦。
