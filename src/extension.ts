@@ -1,12 +1,10 @@
 import * as vscode from 'vscode';
-import {registerCommonCmd} from './commonCmd';
 import {registerHighlight} from './heighlight';
-import {registerCompletion} from './completion';
 import {registerGpt} from './gpt';
+import Completion from './completion';
 
 export async function activate(context: vscode.ExtensionContext) {
-	registerCommonCmd();
+	await new Completion(context).activate();
 	registerHighlight(context);
-	registerCompletion(context);
 	registerGpt(context);
 }

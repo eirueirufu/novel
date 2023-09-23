@@ -2,73 +2,81 @@ import * as vscode from 'vscode';
 import Fuse from 'fuse.js';
 import * as path from 'path';
 
-export async function registerCompletion(context: vscode.ExtensionContext) {
-	const configKey = 'novel.completionFilePath';
+export default class Completion {
+	dictPathConfig = 'novel.completionFilePath';
 
-	vscode.commands.registerCommand('completion.selectConfigFile', async () => {
-		const result = await vscode.window.showOpenDialog({
-			canSelectFiles: true,
-			canSelectFolders: false,
-			canSelectMany: true,
-			title: '请选择提示配置文件，每个提示之间要用换行',
-		});
-		if (!result || result.length === 0) {
-			return;
+	private context: vscode.ExtensionContext;
+	private completionItemProvider: CompletionItemProvider;
+	private fs: vscode.FileSystem = vscode.workspace.fs;
+
+	constructor(context: vscode.ExtensionContext, fs?: vscode.FileSystem) {
+		this.context = context;
+		this.completionItemProvider = new CompletionItemProvider();
+		if (fs) {
+			this.fs = fs;
 		}
-		const configPath = result[0].path;
-		await vscode.workspace.getConfiguration().update(configKey, configPath);
-	});
-
-	const completionItemProvider = new CompletionItemProvider();
-	const words = await getCompletionWords();
-	if (words) {
-		completionItemProvider.refreshFuse(words);
 	}
 
-	context.subscriptions.push(
-		vscode.languages.registerCompletionItemProvider(
-			'novel',
-			completionItemProvider
-		)
-	);
-
-	context.subscriptions.push(
-		vscode.workspace.onDidChangeConfiguration(async event => {
-			if (!event.affectsConfiguration(configKey)) {
-				return;
-			}
-			const words = await getCompletionWords();
-			if (!words) {
-				return;
-			}
-			completionItemProvider.refreshFuse(words);
-		})
-	);
-
-	async function getCompletionWords() {
+	async getCompletionWords() {
 		let completionFilePath = vscode.workspace
 			.getConfiguration()
-			.get(configKey) as string;
+			.get(this.dictPathConfig) as string;
 		if (!completionFilePath) {
-			completionFilePath = context.asAbsolutePath(
+			completionFilePath = this.context.asAbsolutePath(
 				path.join('media', 'completion')
 			);
 		}
-		const data = await vscode.workspace.fs.readFile(
+		const data = await this.fs.readFile(
 			vscode.Uri.file(completionFilePath)
 		);
 		const textDecoder = new TextDecoder();
 		const result = textDecoder.decode(data);
 		const list = result.split(/\r?\n/);
-		return list;
+		this.completionItemProvider.refreshFuse(list);
+	}
+
+	async activate() {
+		await this.getCompletionWords();
+		this.context.subscriptions.push(
+			vscode.commands.registerCommand(
+				'completion.selectConfigFile',
+				async () => {
+					const result = await vscode.window.showOpenDialog({
+						canSelectFiles: true,
+						canSelectFolders: false,
+						canSelectMany: true,
+						title: '请选择提示配置文件，每个提示之间要用换行',
+					});
+					if (!result || result.length === 0) {
+						return;
+					}
+					const configPath = result[0].path;
+					await vscode.workspace
+						.getConfiguration()
+						.update(this.dictPathConfig, configPath);
+				}
+			),
+			vscode.languages.registerCompletionItemProvider(
+				'novel',
+				this.completionItemProvider
+			),
+			vscode.workspace.onDidChangeConfiguration(async event => {
+				if (!event.affectsConfiguration(this.dictPathConfig)) {
+					return;
+				}
+				await this.getCompletionWords();
+			})
+		);
 	}
 }
 
 export class CompletionItemProvider implements vscode.CompletionItemProvider {
-	fuse: Fuse<string>;
+	private fuse: Fuse<string>;
+
 	constructor() {
 		this.fuse = new Fuse([]);
 	}
+
 	provideCompletionItems(
 		document: vscode.TextDocument,
 		position: vscode.Position
