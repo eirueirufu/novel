@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
-import {registerHighlight} from './heighlight';
-import {registerGpt} from './gpt';
+import Highlight from './highlight';
 import Completion from './completion';
+import Gpt from './gpt';
 
 export async function activate(context: vscode.ExtensionContext) {
 	await new Completion(context).activate();
-	registerHighlight(context);
-	registerGpt(context);
+	await new Gpt(context).activate();
+	await new Highlight(context).activate();
 }

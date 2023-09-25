@@ -10,8 +10,8 @@ suite('Completion Tests', () => {
 	let mockContext: vscode.ExtensionContext;
 
 	beforeEach(() => {
-		completion = new Completion(mockContext);
 		mockContext = {} as vscode.ExtensionContext;
+		completion = new Completion(mockContext);
 	});
 	afterEach(() => {
 		sandbox.restore();
