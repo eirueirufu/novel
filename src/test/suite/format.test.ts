@@ -11,10 +11,21 @@ suite('Format Tests', () => {
 
 	beforeEach(() => {
 		mockContext = {} as vscode.ExtensionContext;
-		format = new Format();
+		format = new Format(mockContext);
 	});
 	afterEach(() => {
 		sandbox.restore();
+	});
+
+	test('activate', async () => {
+		mockContext = ({
+			subscriptions: [],
+		} as unknown) as vscode.ExtensionContext;
+		const mockSubscriptions = sandbox.mock(mockContext.subscriptions);
+		format = new Format(mockContext);
+		mockSubscriptions.expects('push').atLeast(1);
+		await format.activate();
+		sandbox.verify();
 	});
 
 	test('Visitor Tests', () => {
@@ -287,7 +298,7 @@ suite('Format Tests', () => {
 			},
 		];
 		testCases.map(testCase => {
-			format = new Format();
+			format = new Format(mockContext);
 			if (testCase.len) {
 				format.maxParaLen = testCase.len;
 			}

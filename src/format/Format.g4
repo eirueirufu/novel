@@ -20,4 +20,4 @@ sent:
 	| '"' sent* '"'
 	| str;
 
-str: WORDS? ('。' | '！' | '？' | '……')+ | WORDS;
+str: WORDS? ('。' | '！' | '？' | '…')+ | WORDS;

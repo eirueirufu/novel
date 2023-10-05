@@ -2,13 +2,38 @@ import {CharStream, CommonTokenStream} from 'antlr4';
 import Lexer from './FormatLexer';
 import Parser, {ParaContext, SectionContext, SentContext} from './FormatParser';
 import FormatVisitor from './FormatVisitor';
+import * as vscode from 'vscode';
 
-export default class Format {
+export default class Format implements vscode.DocumentFormattingEditProvider {
 	private visitor: Visitor;
+	private context: vscode.ExtensionContext;
 	maxParaLen: number;
-	constructor() {
+
+	constructor(context: vscode.ExtensionContext) {
+		this.context = context;
 		this.visitor = new Visitor();
-		this.maxParaLen = 200;
+		this.maxParaLen = 20;
+	}
+
+	provideDocumentFormattingEdits(
+		document: vscode.TextDocument
+	): vscode.TextEdit[] {
+		const text = document.getText();
+		const format = this.format(text);
+		const range = new vscode.Range(
+			document.positionAt(0),
+			document.positionAt(text.length)
+		);
+		return [new vscode.TextEdit(range, format)];
+	}
+
+	async activate() {
+		this.context.subscriptions.push(
+			vscode.languages.registerDocumentFormattingEditProvider(
+				'novel',
+				this
+			)
+		);
 	}
 
 	parse(text: string): Section {

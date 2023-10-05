@@ -60,7 +60,7 @@ export default class FormatParser extends Parser {
                                                             "'\"'", "'\\u3002'", 
                                                             "'\\uFF01'", 
                                                             "'\\uFF1F'", 
-                                                            "'\\u2026\\u2026'" ];
+                                                            "'\\u2026'" ];
 	public static readonly symbolicNames: (string | null)[] = [ null, null, 
                                                              null, null, 
                                                              null, null, 
