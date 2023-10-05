@@ -55,6 +55,11 @@
 					"type": "string",
 					"default": "你是一个专业的网文作者",
 					"description": "gpt聊天system设定"
+				},
+				"novel.maxParaLen": {
+					"type": "number",
+					"description": "格式化每个段落的长度",
+					"default": 20
 				}
 			}
 		},
@@ -135,7 +140,7 @@
 	"main": "./out/extension.js",
 	"scripts": {
 		"package": "npx vsce package",
-		"compile": "tsc -p ./",
+		"compile": "tsc -p ./ && cd ./src/format && antlr4 -Dlanguage=TypeScript -visitor Format.g4",
 		"lint": "gts lint src/",
 		"watch": "tsc -watch -p ./",
 		"clean": "gts clean",
@@ -148,6 +153,7 @@
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
 	},
 	"dependencies": {
+		"antlr4": "^4.13.1",
 		"fuse.js": "^6.6.2",
 		"glob": "^7.1.4",
 		"openai": "^4.7.1"
@@ -165,10 +171,10 @@
 		"esbuild": "^0.18.11",
 		"eslint": "^8.26.0",
 		"gts": "^3.1.1",
-		"prettier": "2.2.1",
-		"source-map-support": "^0.5.12",
-		"typescript": "^5.1.6",
 		"mocha": "^10.2.0",
-		"sinon": "^16.0.0"
+		"prettier": "2.2.1",
+		"sinon": "^16.0.0",
+		"source-map-support": "^0.5.12",
+		"typescript": "^5.1.6"
 	}
 }
