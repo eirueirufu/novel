@@ -5,8 +5,10 @@ import FormatVisitor from './FormatVisitor';
 
 export default class Format {
 	private visitor: Visitor;
+	maxParaLen: number;
 	constructor() {
 		this.visitor = new Visitor();
+		this.maxParaLen = 200;
 	}
 
 	parse(text: string): Section {
@@ -16,6 +18,26 @@ export default class Format {
 		const parser = new Parser(tokens);
 		const tree = parser.section();
 		return this.visitor.visit(tree) as Section;
+	}
+
+	format(text: string): string {
+		const section = this.parse(text);
+		const paras: string[] = [];
+		section.Paras.forEach(para => {
+			let formatting = '';
+			para.Sents.forEach(sent => {
+				if (formatting.length > this.maxParaLen) {
+					paras.push(formatting.trim());
+					formatting = '';
+				}
+				formatting += sent;
+			});
+			paras.push(formatting.trim());
+		});
+		if (paras.length > 0) {
+			paras[0] = '\t' + paras[0];
+		}
+		return paras.join('\n\t');
 	}
 }
 
