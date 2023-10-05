@@ -140,7 +140,7 @@
 	"main": "./out/extension.js",
 	"scripts": {
 		"package": "npx vsce package",
-		"compile": "tsc -p ./ && cd ./src/format && antlr4 -Dlanguage=TypeScript -visitor Format.g4",
+		"compile": "tsc -p ./",
 		"lint": "gts lint src/",
 		"watch": "tsc -watch -p ./",
 		"clean": "gts clean",
@@ -150,7 +150,8 @@
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
 		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
-		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch"
+		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+		"antlrgen": "cd ./src/format && antlr4 -Dlanguage=TypeScript -visitor Format.g4"
 	},
 	"dependencies": {
 		"antlr4": "^4.13.1",

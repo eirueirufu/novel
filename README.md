@@ -34,6 +34,8 @@
 
 ![格式化](./media/readme/format.gif)
 
+默认每段长度为20，可以自己配置合适的长度，~~亲测长度越短一句一段效果最好~~
+
 ### gpt提问
 
 使用条件: 
@@ -45,15 +47,9 @@
 
 #### 自定义配置
 
-在工作区.vscode目录下的settings.json配置文件中，可以自定义gpt相关的配置
-```json
-{
-    "novel.openaiKey": "your openaiKey",
-    "novel.openaiBaseURL": "https://your-proxy.com/v1",
-    "novel.gptChatSystem": "See https://platform.openai.com/docs/guides/gpt/chat-completions-api",
-    "novel.gptModel": "See https://platform.openai.com/docs/models/overview",
-}
-```
+在设置修改配置，或者在工作区.vscode目录下的settings.json配置文件中自定义配置
+
+![setting](./media/readme/setting.png)
 
 ## 其他
 
