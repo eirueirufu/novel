@@ -299,11 +299,23 @@ suite('Format Tests', () => {
 		];
 		testCases.map(testCase => {
 			format = new Format(mockContext);
+
+			let maxParaLen = 20;
 			if (testCase.len) {
-				format.maxParaLen = testCase.len;
+				maxParaLen = testCase.len;
 			}
+
+			const configuration = ({
+				get: sandbox.stub().returns(maxParaLen),
+			} as unknown) as vscode.WorkspaceConfiguration;
+
+			sandbox
+				.stub(vscode.workspace, 'getConfiguration')
+				.returns(configuration);
+
 			const actual = format.format(testCase.text);
 			assert.equal(actual, testCase.expected);
+			sandbox.restore();
 		});
 	});
 });

@@ -5,14 +5,14 @@ import FormatVisitor from './FormatVisitor';
 import * as vscode from 'vscode';
 
 export default class Format implements vscode.DocumentFormattingEditProvider {
+	maxParaLenConfig = 'novel.maxParaLen';
+
 	private visitor: Visitor;
 	private context: vscode.ExtensionContext;
-	maxParaLen: number;
 
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
 		this.visitor = new Visitor();
-		this.maxParaLen = 20;
 	}
 
 	provideDocumentFormattingEdits(
@@ -46,12 +46,15 @@ export default class Format implements vscode.DocumentFormattingEditProvider {
 	}
 
 	format(text: string): string {
+		const maxParaLen = vscode.workspace
+			.getConfiguration()
+			.get(this.maxParaLenConfig) as number;
 		const section = this.parse(text);
 		const paras: string[] = [];
 		section.Paras.forEach(para => {
 			let formatting = '';
 			para.Sents.forEach(sent => {
-				if (formatting.length > this.maxParaLen) {
+				if (formatting.length > maxParaLen) {
 					paras.push(formatting.trim());
 					formatting = '';
 				}

@@ -55,6 +55,11 @@
 					"type": "string",
 					"default": "你是一个专业的网文作者",
 					"description": "gpt聊天system设定"
+				},
+				"novel.maxParaLen": {
+					"type": "number",
+					"description": "格式化每个段落的长度",
+					"default": 20
 				}
 			}
 		},
