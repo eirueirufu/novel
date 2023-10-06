@@ -2,7 +2,7 @@
 	"name": "novel",
 	"displayName": "novel",
 	"description": "网文写作插件，提供高亮、提示、gpt等功能",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"publisher": "eirueirufu",
 	"icon": "media/novel.png",
 	"engines": {
@@ -148,7 +148,7 @@
 		"pretest": "npm run compile",
 		"test": "node ./out/test/runTest.js",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --inject:./import-meta-url.js --define:import.meta.url=import_meta_url",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"antlrgen": "cd ./src/format && antlr4 -Dlanguage=TypeScript -visitor Format.g4"
