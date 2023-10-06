@@ -46,6 +46,9 @@ export default class Format implements vscode.DocumentFormattingEditProvider {
 	}
 
 	format(text: string): string {
+		if (!text) {
+			return text;
+		}
 		const maxParaLen = vscode.workspace
 			.getConfiguration()
 			.get(this.maxParaLenConfig) as number;
@@ -60,7 +63,10 @@ export default class Format implements vscode.DocumentFormattingEditProvider {
 				}
 				formatting += sent;
 			});
-			paras.push(formatting.trim());
+			formatting = formatting.trim();
+			if (formatting) {
+				paras.push(formatting);
+			}
 		});
 		if (paras.length > 0) {
 			paras[0] = '\t' + paras[0];

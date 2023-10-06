@@ -34,12 +34,7 @@ suite('Format Tests', () => {
 			expected: Section;
 		}
 		const testCases: TestCase[] = [
-			// ws
-			{text: ' ', expected: {Paras: []}},
-			{text: '\t', expected: {Paras: []}},
-			{text: ' \t', expected: {Paras: []}},
 			// 文字
-			{text: '', expected: {Paras: []}},
 			{text: '123', expected: {Paras: [{Sents: ['123']}]}},
 			{text: 'test', expected: {Paras: [{Sents: ['test']}]}},
 			{text: '测试', expected: {Paras: [{Sents: ['测试']}]}},
@@ -220,12 +215,20 @@ suite('Format Tests', () => {
 			},
 			// 章节
 			{
-				text: '',
+				text: '\n',
 				expected: {Paras: []},
 			},
 			{
-				text: '\n',
+				text: '\n\n\n',
 				expected: {Paras: []},
+			},
+			{
+				text: '\n测试\n测试\n',
+				expected: {Paras: [{Sents: ['测试']}, {Sents: ['测试']}]},
+			},
+			{
+				text: '\n测试\n\n测试\n',
+				expected: {Paras: [{Sents: ['测试']}, {Sents: ['测试']}]},
 			},
 		];
 		testCases.map(testCase => {
@@ -241,10 +244,6 @@ suite('Format Tests', () => {
 			expected: string;
 		}
 		const testCases: TestCase[] = [
-			{
-				text: '',
-				expected: '',
-			},
 			{
 				text: '测试',
 				expected: '\t测试',
@@ -295,6 +294,16 @@ suite('Format Tests', () => {
 				text: '<测试：“测试中。”>',
 				len: 2,
 				expected: '\t<测试：“测试中。”>',
+			},
+			{
+				text: '\n测试\n\n测试\n',
+				len: 2,
+				expected: '\t测试\n\t测试',
+			},
+			{
+				text: '\n测试\n\t\n测试\n',
+				len: 2,
+				expected: '\t测试\n\t测试',
 			},
 		];
 		testCases.map(testCase => {

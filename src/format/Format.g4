@@ -1,13 +1,12 @@
 grammar Format;
 
-WS: [ \t]+ -> channel(HIDDEN);
 NEWLINE: [\r\n]+;
 WORDS: (~[\r\n。！？…（）()【】[\]《》<>“”"])+;
 
 // 章节
-section: para+;
+section: para*;
 // 段落
-para: sent+ NEWLINE?;
+para: sent+ NEWLINE? | NEWLINE;
 // 句子
 sent:
 	'（' sent* '）'
