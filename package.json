@@ -2,7 +2,7 @@
 	"name": "novel",
 	"displayName": "novel",
 	"description": "网文写作插件，提供高亮、提示、gpt等功能",
-	"version": "0.3.3",
+	"version": "0.4.0",
 	"publisher": "eirueirufu",
 	"icon": "media/novel.png",
 	"engines": {
@@ -157,7 +157,8 @@
 		"antlr4": "^4.13.1",
 		"fuse.js": "^6.6.2",
 		"glob": "^7.1.4",
-		"openai": "^4.7.1"
+		"openai": "^4.7.1",
+		"wikipedia": "^2.1.1"
 	},
 	"devDependencies": {
 		"@types/glob": "7.1.3",
