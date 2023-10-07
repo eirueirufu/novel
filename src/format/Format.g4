@@ -1,7 +1,7 @@
 grammar Format;
 
 NEWLINE: [\r\n]+;
-WORDS: (~[\r\n。！？…（）()【】[\]《》<>“”"])+;
+WORDS: (~[\r\n。！？…（）()【】[\]《》“”])+;
 
 // 章节
 section: para*;
@@ -14,9 +14,7 @@ sent:
 	| '【' sent* '】'
 	| '[' sent* ']'
 	| '《' sent* '》'
-	| '<' sent* '>'
 	| '“' sent* '”'
-	| '"' sent* '"'
 	| str;
 
 str: WORDS? ('。' | '！' | '？' | '…')+ | WORDS;
