@@ -3,7 +3,6 @@ import * as vscode from 'vscode';
 export default class Highlight {
 	configKey: string = 'novel.highlightWords';
 	decorationMap: Map<string, vscode.TextEditorDecorationType>;
-	timeout: NodeJS.Timer | undefined = undefined;
 	highlightWords: [string, string][] = [];
 
 	private context: vscode.ExtensionContext;
@@ -19,7 +18,6 @@ export default class Highlight {
 				string,
 				string
 			][]) ?? [];
-		this.triggerUpdateDecorations(true);
 		this.context.subscriptions.push(
 			vscode.commands.registerTextEditorCommand(
 				'highlight.select',
@@ -83,23 +81,7 @@ export default class Highlight {
 						.getConfiguration()
 						.update(this.configKey, words);
 				}
-			),
-			vscode.workspace.onDidChangeConfiguration(event => {
-				if (!event.affectsConfiguration(this.configKey)) {
-					return;
-				}
-				this.highlightWords =
-					(vscode.workspace
-						.getConfiguration()
-						.get(this.configKey) as [string, string][]) ?? [];
-				this.triggerUpdateDecorations(true);
-			}),
-			vscode.window.onDidChangeActiveTextEditor(() => {
-				this.triggerUpdateDecorations(true);
-			}),
-			vscode.workspace.onDidChangeTextDocument(() => {
-				this.triggerUpdateDecorations(true);
-			})
+			)
 		);
 	}
 
@@ -143,19 +125,5 @@ export default class Highlight {
 			}
 			activeEditor.setDecorations(decorationType, v);
 		});
-	}
-
-	triggerUpdateDecorations(throttle = false) {
-		if (this.timeout) {
-			clearTimeout(this.timeout);
-			this.timeout = undefined;
-		}
-		if (throttle) {
-			this.timeout = setTimeout(() => {
-				this.updateDecorations();
-			}, 200);
-		} else {
-			this.updateDecorations();
-		}
 	}
 }

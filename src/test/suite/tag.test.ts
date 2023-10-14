@@ -1,17 +1,17 @@
 import sinon from 'sinon';
 import {afterEach, beforeEach} from 'mocha';
 import * as vscode from 'vscode';
+import Tag from '../../tag';
 import assert from 'assert';
-import Highlight from '../../highlight';
 
-suite('Highlight Tests', () => {
+suite('Decoration Tests', () => {
 	const sandbox = sinon.createSandbox();
 	let mockContext: vscode.ExtensionContext;
-	let highlight: Highlight;
+	let tag: Tag;
 
 	beforeEach(() => {
 		mockContext = {} as vscode.ExtensionContext;
-		highlight = new Highlight(mockContext);
+		tag = new Tag(mockContext);
 	});
 	afterEach(() => {
 		sandbox.restore();
@@ -22,13 +22,13 @@ suite('Highlight Tests', () => {
 			subscriptions: [],
 		} as unknown) as vscode.ExtensionContext;
 		const mockSubscriptions = sandbox.mock(mockContext.subscriptions);
-		highlight = new Highlight(mockContext);
+		tag = new Tag(mockContext);
 		mockSubscriptions.expects('push').atLeast(1);
-		await highlight.activate();
+		await tag.activate();
 		sandbox.verify();
 	});
 
-	test('updateDecorations', async () => {
+	test('decorateTags', async () => {
 		class MockDocument {
 			text: string;
 			languageId = 'novel';
@@ -52,34 +52,45 @@ suite('Highlight Tests', () => {
 				return new vscode.Position(0, 0);
 			}
 		}
+
 		interface TestCase {
 			text: string;
-			highlightWords: [string, string][];
+			tagMode?: boolean;
 			expected: Map<string, vscode.DecorationOptions[]>;
 		}
 
 		const testCases: TestCase[] = [
 			{
 				text: '',
-				highlightWords: [],
 				expected: new Map([]),
 			},
 			{
 				text: '测试',
-				highlightWords: [],
 				expected: new Map([]),
 			},
 			{
-				text: '',
-				highlightWords: [['测', 'red']],
-				expected: new Map([]),
-			},
-			{
-				text: '测试',
-				highlightWords: [['测', 'red']],
+				text: '愉快',
+				tagMode: true,
 				expected: new Map([
 					[
-						'red',
+						'a',
+						[
+							{
+								range: new vscode.Range(
+									new vscode.Position(0, 0),
+									new vscode.Position(0, 2)
+								),
+							},
+						],
+					],
+				]),
+			},
+			{
+				text: '看',
+				tagMode: true,
+				expected: new Map([
+					[
+						'v',
 						[
 							{
 								range: new vscode.Range(
@@ -92,15 +103,15 @@ suite('Highlight Tests', () => {
 				]),
 			},
 			{
-				text: '测试',
-				highlightWords: [['试', 'red']],
+				text: '脸颊',
+				tagMode: true,
 				expected: new Map([
 					[
-						'red',
+						'n',
 						[
 							{
 								range: new vscode.Range(
-									new vscode.Position(0, 1),
+									new vscode.Position(0, 0),
 									new vscode.Position(0, 2)
 								),
 							},
@@ -109,14 +120,11 @@ suite('Highlight Tests', () => {
 				]),
 			},
 			{
-				text: '测试',
-				highlightWords: [
-					['测', 'red'],
-					['试', 'blue'],
-				],
+				text: '看温柔的脸颊',
+				tagMode: true,
 				expected: new Map([
 					[
-						'red',
+						'v',
 						[
 							{
 								range: new vscode.Range(
@@ -127,24 +135,7 @@ suite('Highlight Tests', () => {
 						],
 					],
 					[
-						'blue',
-						[
-							{
-								range: new vscode.Range(
-									new vscode.Position(0, 1),
-									new vscode.Position(0, 2)
-								),
-							},
-						],
-					],
-				]),
-			},
-			{
-				text: '测试测 试测试',
-				highlightWords: [['试测', 'red']],
-				expected: new Map([
-					[
-						'red',
+						'a',
 						[
 							{
 								range: new vscode.Range(
@@ -152,6 +143,11 @@ suite('Highlight Tests', () => {
 									new vscode.Position(0, 3)
 								),
 							},
+						],
+					],
+					[
+						'n',
+						[
 							{
 								range: new vscode.Range(
 									new vscode.Position(0, 4),
@@ -163,30 +159,53 @@ suite('Highlight Tests', () => {
 				]),
 			},
 			{
-				text: `测测试试
-试测测试
-试试测测`,
-				highlightWords: [['测测', 'red']],
+				text: `
+看。
+温柔的，测试。
+ 脸颊 
+`,
+				tagMode: true,
 				expected: new Map([
 					[
-						'red',
+						'v',
 						[
 							{
 								range: new vscode.Range(
-									new vscode.Position(0, 0),
-									new vscode.Position(0, 2)
+									new vscode.Position(1, 0),
+									new vscode.Position(1, 1)
 								),
 							},
+						],
+					],
+					[
+						'vn',
+						[
 							{
 								range: new vscode.Range(
-									new vscode.Position(1, 1),
-									new vscode.Position(1, 3)
+									new vscode.Position(2, 4),
+									new vscode.Position(2, 6)
 								),
 							},
+						],
+					],
+					[
+						'a',
+						[
 							{
 								range: new vscode.Range(
-									new vscode.Position(2, 2),
-									new vscode.Position(2, 4)
+									new vscode.Position(2, 0),
+									new vscode.Position(2, 2)
+								),
+							},
+						],
+					],
+					[
+						'n',
+						[
+							{
+								range: new vscode.Range(
+									new vscode.Position(3, 1),
+									new vscode.Position(3, 3)
 								),
 							},
 						],
@@ -213,25 +232,20 @@ suite('Highlight Tests', () => {
 			} as unknown) as vscode.TextEditor;
 			sandbox.stub(vscode.window, 'activeTextEditor').value(mockEditor);
 
-			const decorationTypeMap: Map<
-				string,
-				vscode.TextEditorDecorationType
-			> = new Map();
-			testCase.expected.forEach((v, k) => {
-				decorationTypeMap.set(
-					k,
-					vscode.window.createTextEditorDecorationType({
-						color: k,
-					})
-				);
-			});
-			highlight = new Highlight(mockContext);
-			highlight.highlightWords = testCase.highlightWords;
-			highlight.decorationMap = decorationTypeMap;
-			highlight.updateDecorations();
+			if (testCase.tagMode) {
+				const configuration = ({
+					get: sandbox.stub().returns(true),
+				} as unknown) as vscode.WorkspaceConfiguration;
+
+				sandbox
+					.stub(vscode.workspace, 'getConfiguration')
+					.returns(configuration);
+			}
+			tag = new Tag(mockContext);
+			tag.decorateTags();
 
 			testCase.expected.forEach((v, k) => {
-				const type = decorationTypeMap.get(k);
+				const type = tag.decorationMap.get(k);
 				const actual = decorationSetMap.get(type!);
 				assert.deepEqual(actual, v);
 			});

@@ -2,7 +2,7 @@
 	"name": "novel",
 	"displayName": "novel",
 	"description": "网文写作插件，提供高亮、提示、gpt等功能",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"publisher": "eirueirufu",
 	"icon": "media/novel.png",
 	"engines": {
@@ -60,6 +60,11 @@
 					"type": "number",
 					"description": "格式化每个段落的长度",
 					"default": 20
+				},
+				"novel.tagMode": {
+					"type": "boolean",
+					"default": false,
+					"description": "词性模式"
 				}
 			}
 		},
@@ -87,6 +92,10 @@
 					"light": "media/light/document.svg",
 					"dark": "media/dark/document.svg"
 				}
+			},
+			{
+				"command": "highlight.onOffTagMode",
+				"title": "开/关词性模式"
 			}
 		],
 		"viewsContainers": {
@@ -119,6 +128,11 @@
 					"command": "gpt.config",
 					"when": "editorLangId == 'novel'",
 					"group": "navigation@4"
+				},
+				{
+					"command": "highlight.onOffTagMode",
+					"when": "editorLangId == 'novel'",
+					"group": "navigation@5"
 				}
 			]
 		},
@@ -148,15 +162,19 @@
 		"pretest": "npm run compile",
 		"test": "node ./out/test/runTest.js",
 		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --inject:./import-meta-url.js --define:import.meta.url=import_meta_url",
+		"esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --inject:./import-meta-url.js --define:import.meta.url=import_meta_url --loader:.json=file",
 		"esbuild": "npm run esbuild-base -- --sourcemap",
 		"esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
 		"antlrgen": "cd ./src/format && antlr4 -Dlanguage=TypeScript -visitor Format.g4"
 	},
 	"dependencies": {
 		"antlr4": "^4.13.1",
+		"aws-sdk": "^2.1473.0",
 		"fuse.js": "^6.6.2",
 		"glob": "^7.1.4",
+		"mock-aws-s3": "^4.0.2",
+		"nock": "^13.3.4",
+		"nodejieba": "^2.6.0",
 		"openai": "^4.7.1",
 		"wikipedia": "^2.1.1"
 	},
