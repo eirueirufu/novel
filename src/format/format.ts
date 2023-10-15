@@ -1,4 +1,11 @@
-import {CharStream, CommonTokenStream} from 'antlr4';
+import {
+	CharStream,
+	CommonTokenStream,
+	ErrorListener,
+	RecognitionException,
+	Recognizer,
+	Token,
+} from 'antlr4';
 import Lexer from './FormatLexer';
 import Parser, {ParaContext, SectionContext, SentContext} from './FormatParser';
 import FormatVisitor from './FormatVisitor';
@@ -41,37 +48,59 @@ export default class Format implements vscode.DocumentFormattingEditProvider {
 		const lexer = new Lexer(chars);
 		const tokens = new CommonTokenStream(lexer);
 		const parser = new Parser(tokens);
+		parser.addErrorListener(new ThrowErrorListener());
 		const tree = parser.section();
 		return this.visitor.visit(tree) as Section;
 	}
 
 	format(text: string): string {
-		if (!text) {
+		try {
+			if (!text) {
+				return text;
+			}
+			const maxParaLen = vscode.workspace
+				.getConfiguration()
+				.get(this.maxParaLenConfig) as number;
+			const section = this.parse(text);
+			const paras: string[] = [];
+			section.Paras.forEach(para => {
+				let formatting = '';
+				para.Sents.forEach(sent => {
+					if (formatting.length > maxParaLen) {
+						paras.push(formatting.trim());
+						formatting = '';
+					}
+					formatting += sent;
+				});
+				formatting = formatting.trim();
+				if (formatting) {
+					paras.push(formatting);
+				}
+			});
+			if (paras.length > 0) {
+				paras[0] = '\t' + paras[0];
+			}
+			return paras.join('\n\t');
+		} catch (error) {
+			if (error instanceof Error) {
+				vscode.window.showErrorMessage(error.message)
+			}
 			return text;
 		}
-		const maxParaLen = vscode.workspace
-			.getConfiguration()
-			.get(this.maxParaLenConfig) as number;
-		const section = this.parse(text);
-		const paras: string[] = [];
-		section.Paras.forEach(para => {
-			let formatting = '';
-			para.Sents.forEach(sent => {
-				if (formatting.length > maxParaLen) {
-					paras.push(formatting.trim());
-					formatting = '';
-				}
-				formatting += sent;
-			});
-			formatting = formatting.trim();
-			if (formatting) {
-				paras.push(formatting);
-			}
-		});
-		if (paras.length > 0) {
-			paras[0] = '\t' + paras[0];
-		}
-		return paras.join('\n\t');
+		
+	}
+}
+
+class ThrowErrorListener extends ErrorListener<Token> {
+	syntaxError(
+		recognizer: Recognizer<Token>,
+		offendingSymbol: Token,
+		line: number,
+		column: number,
+		msg: string,
+		e: RecognitionException | undefined
+	): void {
+		throw new Error(`文本解析错误: 行${line}列${column}, 错误信息: ${msg}`)
 	}
 }
 
